@@ -1,0 +1,30 @@
+<?php	
+	class CProducts{
+            private $products = array();
+            public function __construct() {
+            }
+            public function getList($limit, $conn){
+                $query = "";
+                if (is_int($limit)){
+                    $query = "SELECT * FROM Products LIMIT".' '.strval($limit);
+                }
+                else{
+                    $query = "SELECT * FROM Products LIMIT";
+                }
+                if ($conn != ''){
+                    try{
+                        $result = mysqli_query($conn, $query);
+                        $products = $result->fetch_all(MYSQLI_ASSOC);
+                        array_multisort(array_column($products, "DATE_CREATE"), SORT_DESK, $products);
+                    }   
+                    catch(mysqli_sql_exception){
+                        echo "Data has not been extracted";
+                    }
+                }
+                else {
+                    echo "Connection has not been establisted";
+                }
+                return $this->products;
+            }
+	}
+?>
